@@ -19,24 +19,24 @@
                 <a href="{% url 'homepage' %}">{{item.product.name}}</a></td>
             <td>
                 <form action="{% url 'update' item.product.name %}" method="post">
-                <select class="form-select" name="choice" aria-label="Default select example">
-                    <option selected>{{item.quantity}}</option>
-                    {num : range(10)}
-                    {% for i in data %}
-                    <option id="choice{{i}}" value="{{i}}">{{i}}</option>
-                    {% endfor %}
-                </select>
-                {% csrf_token %}
-                        <input type="submit" value="Update">
+                    <select class="form-select" name="choice" aria-label="Default select example">
+                        <option selected>{{item.quantity}}</option>
+                        {num : range(10)}
+                        {% for i in data %}
+                        <option id="choice{{i}}" value="{{i}}">{{i}}</option>
+                        {% endfor %}
+                    </select>
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-success" value="Update">
                 </form>
             </td>
             <td>
                 <div class="container-fluid">
 
 
-                    <form  action="{% url 'remove' item.product.name %}" method="post">
+                    <form action="{% url 'remove' item.product.name %}" method="post">
                         {% csrf_token %}
-                        <input type="submit" value="Delete">
+                        <input type="submit" class="btn btn-danger" value="Delete">
                     </form>
                 </div>
             </td>
