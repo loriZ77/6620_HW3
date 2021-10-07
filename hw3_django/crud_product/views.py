@@ -1,7 +1,6 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-
 from .models import Product, Cart
 
 
@@ -15,30 +14,35 @@ def home(request):
 def shopping_cart(request):
     context = {
         'products': Product.objects.all(),
-        'cart': Cart.objects.all()
+        'cart': Cart.objects.all(),
+        "data": [1, 2, 3, 4, 5]
     }
     return render(request, 'project/shopping_cart.html', context)
 
 
-def add_to_cart(request, product):
-    c1 = Cart.objects.get(id=1)
-    c2 = Cart.objects.get(id=2)
-    c3 = Cart.objects.get(id=3)
-    product_id = product.name[-1]
-    if product_id == '1':
-        c1.quantity+1
-        c1.save()
-    elif product_id == '2':
-        c2.quantity+1
-        c2.save()
-    else:
-        c3.quantity+1
-        c3.save()
-    return HttpResponseRedirect(reverse('project:home'))
+def add_to_cart(request, product_name):
+    added_product = get_object_or_404(Product, name=product_name)
+    try:
+        cart = get_object_or_404(Cart, product=added_product)
+    except(404, Cart.DoesNotExist):
+        cart = added_product.cart_set.create(product=added_product, quantity=0)
+    cart.quantity += 1
+    cart.save()
+    return HttpResponseRedirect(reverse('shopping_cart'))
 
 
+def delete_product(request, product_name):
+    product_to_delete = get_object_or_404(Product, name=product_name)
+    cart = get_object_or_404(Cart, product=product_to_delete)
+    cart.quantity = 0
+    cart.save()
+    return HttpResponseRedirect(reverse('shopping_cart'))
 
 
-
-
-
+def update_product(request, product_name):
+    product_to_update = get_object_or_404(Product, name=product_name)
+    selected_quantity = int(request.POST['choice'])
+    cart = get_object_or_404(Cart, product=product_to_update)
+    cart.quantity += selected_quantity
+    cart.save()
+    return HttpResponseRedirect(reverse('shopping_cart'))

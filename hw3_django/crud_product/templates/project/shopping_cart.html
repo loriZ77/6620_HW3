@@ -1,34 +1,53 @@
 {% extends "project/base.html" %}
 {% block content %}
-    <h1>shopping cart</h1>
-    {% if cart %}
-        <table class="table">
-            <thead>
-                <tr>
-                  <th scope="col">Product Name</th>
-                  <th scope="col">Quantity</th>
-                  <th scope="col">CRUD</th>
+<h1>shopping cart</h1>
+{% if cart %}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Empty this product</th>
 
-                </tr>
-             </thead>
-            <tbody>
-            {% for item in cart %}
-                <tr>
-                    <div>
-                        <td>{{item.product.name}}</td>
-                        <td><input id="quantity" class="form-control">{{item.quantity}}</td>
-                        <td><span class="pull-right" style="white-space: nowrap">
-                      <i class="fa-2x fa fa-plus"></i>
-                      <i class="fa-2x fa fa-check"></i>
-                  </span></td>
-                    </div>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in cart %}
+    <tr>
+        <div>
+            <td>
+                <a href="{% url 'homepage' %}">{{item.product.name}}</a></td>
+            <td>
+                <form action="{% url 'update' item.product.name %}" method="post">
+                <select class="form-select" name="choice" aria-label="Default select example">
+                    <option selected>{{item.quantity}}</option>
+                    {num : range(10)}
+                    {% for i in data %}
+                    <option id="choice{{i}}" value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+                {% csrf_token %}
+                        <input type="submit" value="Update">
+                </form>
+            </td>
+            <td>
+                <div class="container-fluid">
 
-                </tr>
-            {% endfor %}
 
-            </tbody>
-    </table>
-    {% else %}
-        <p>Your shopping cart is empty.</p>
-    {% endif %}
+                    <form  action="{% url 'remove' item.product.name %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete">
+                    </form>
+                </div>
+            </td>
+        </div>
+
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+{% else %}
+<p>Your shopping cart is empty.</p>
+{% endif %}
 {% endblock content %}

@@ -16,7 +16,7 @@
                       Price: {{product.price}}
                       </div>
                     </p>
-                    <form action="{% url 'shopping_cart' product.name%}" method="post" >
+                    <form action="{% url 'add_to_cart' product.name%}" method="post" >
                         {% csrf_token %}
                         <input type="submit" class="btn btn-primary" value="Add to Cart">
                     </form>
