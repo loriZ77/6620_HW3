@@ -1,4 +1,34 @@
 {% extends "project/base.html" %}
 {% block content %}
     <h1>shopping cart</h1>
+    {% if cart %}
+        <table class="table">
+            <thead>
+                <tr>
+                  <th scope="col">Product Name</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">CRUD</th>
+
+                </tr>
+             </thead>
+            <tbody>
+            {% for item in cart %}
+                <tr>
+                    <div>
+                        <td>{{item.product.name}}</td>
+                        <td><input id="quantity" class="form-control">{{item.quantity}}</td>
+                        <td><span class="pull-right" style="white-space: nowrap">
+                      <i class="fa-2x fa fa-plus"></i>
+                      <i class="fa-2x fa fa-check"></i>
+                  </span></td>
+                    </div>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+    </table>
+    {% else %}
+        <p>Your shopping cart is empty.</p>
+    {% endif %}
 {% endblock content %}
